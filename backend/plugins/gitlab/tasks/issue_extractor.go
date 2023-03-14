@@ -245,6 +245,12 @@ func ExtractApiIssues(taskCtx plugin.SubTaskContext) errors.Error {
 				}
 			}
 			gitlabIssue.ConnectionId = data.Options.ConnectionId
+
+			if body.Type == ticket.INCIDENT {
+				gitlabIssue.StdType = ticket.INCIDENT
+				gitlabIssue.Type = ticket.INCIDENT
+			}
+
 			if body.Author != nil {
 				gitlabAuthor, err := convertGitlabAuthor(body, data.Options.ConnectionId)
 				if err != nil {
