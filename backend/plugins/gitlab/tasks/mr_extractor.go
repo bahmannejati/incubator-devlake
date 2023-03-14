@@ -47,6 +47,8 @@ type MergeRequestRes struct {
 	MergedAt        *api.Iso8601Time `json:"merged_at"`
 	ClosedAt        *api.Iso8601Time `json:"closed_at"`
 	MergeCommitSha  string           `json:"merge_commit_sha"`
+	Squash			bool			 `json:"squash"`
+	SquashCommitSha string           `json:"squash_commit_sha"`
 	MergedBy        struct {
 		Username string `json:"username"`
 	} `json:"merged_by"`
@@ -200,5 +202,10 @@ func convertMergeRequest(mr *MergeRequestRes) (*models.GitlabMergeRequest, error
 		AuthorUsername:   mr.Author.Username,
 		AuthorUserId:     mr.Author.Id,
 	}
+
+	if mr.Squash == true && mr.MergeCommitSha == "" {
+		gitlabMergeRequest.MergeCommitSha = mr.SquashCommitSha
+	}
+
 	return gitlabMergeRequest, nil
 }
