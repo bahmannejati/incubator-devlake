@@ -60,22 +60,36 @@ COPY --from=debian-arm64 /usr/include /rootfs-arm64/usr/include
 COPY --from=debian-arm64 /usr/lib/aarch64-linux-gnu /rootfs-arm64/usr/lib/aarch64-linux-gnu
 COPY --from=debian-arm64 /lib/aarch64-linux-gnu /rootfs-arm64/lib/aarch64-linux-gnu
 
-RUN for arch in aarch64 x86_64 ; do \
-        mkdir -p /tmp/build/${arch} && cd /tmp/build/${arch} && \
+# RUN for arch in aarch64 x86_64 ; do \
+#         mkdir -p /tmp/build/${arch} && cd /tmp/build/${arch} && \
+#         wget https://github.com/libgit2/libgit2/archive/refs/tags/v1.3.2.tar.gz -O - | tar -xz && \
+#         cd libgit2-1.3.2 && \
+#         mkdir build && cd build && \
+
+#         cmake .. -DCMAKE_C_COMPILER=x86_64-linux-gnu-gcc \
+#                 -DBUILD_SHARED_LIBS=ON -DCMAKE_SYSROOT=/rootfs-amd64 \
+#                 -DCMAKE_INSTALL_PREFIX=/usr/local/deps/${arch} ; \
+#         # if [ "$arch" = "aarch64" ] ; then \
+#         #     cmake .. -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc \
+#         #         -DBUILD_SHARED_LIBS=ON -DCMAKE_SYSROOT=/rootfs-arm64 \
+#         #         -DCMAKE_INSTALL_PREFIX=/usr/local/deps/${arch} ; \
+#         # elif [ "$arch" = "x86_64" ] ; then \
+#         #     cmake .. -DCMAKE_C_COMPILER=x86_64-linux-gnu-gcc \
+#         #         -DBUILD_SHARED_LIBS=ON -DCMAKE_SYSROOT=/rootfs-amd64 \
+#         #         -DCMAKE_INSTALL_PREFIX=/usr/local/deps/${arch} ; \
+#         # fi && \
+#         make -j install ; \
+#     done
+
+RUN mkdir -p /tmp/build/aarch64 && cd /tmp/build/aarch64 && \
         wget https://github.com/libgit2/libgit2/archive/refs/tags/v1.3.2.tar.gz -O - | tar -xz && \
-        cd libgit2-1.3.2 && \
-        mkdir build && cd build && \
-        if [ "$arch" = "aarch64" ] ; then \
-            cmake .. -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc \
-                -DBUILD_SHARED_LIBS=ON -DCMAKE_SYSROOT=/rootfs-arm64 \
-                -DCMAKE_INSTALL_PREFIX=/usr/local/deps/${arch} ; \
-        elif [ "$arch" = "x86_64" ] ; then \
-            cmake .. -DCMAKE_C_COMPILER=x86_64-linux-gnu-gcc \
-                -DBUILD_SHARED_LIBS=ON -DCMAKE_SYSROOT=/rootfs-amd64 \
-                -DCMAKE_INSTALL_PREFIX=/usr/local/deps/${arch} ; \
-        fi && \
-        make -j install ; \
-    done
+        ls -lah
+
+# RUN cd /tmp/build/aarch64 && ls -lah && tar -xz ./v1.3.2.tar.gz
+
+RUN cd /tmp/build/aarch64 && ls && cd libgit2-1.3.2 && mkdir build && cd build
+
+RUN cd /tmp/build/aarch64/libgit2-1.3.2 && ls && cd build && cmake .. -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DBUILD_SHARED_LIBS=ON -DCMAKE_SYSROOT=/rootfs-arm64 -DCMAKE_INSTALL_PREFIX=/usr/local/deps/aarch64 && make -j install
 
 
 FROM builder as build
