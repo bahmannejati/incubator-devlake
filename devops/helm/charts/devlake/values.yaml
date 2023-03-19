@@ -181,7 +181,7 @@ alpine:
 
 service:
   # service type: NodePort/ClusterIP
-  type: NodePort
+  type: ClusterIP
   # node port for devlake-ui if NodePort is enabled
   uiPort: 32001
   grafanaPort : 32002

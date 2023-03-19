@@ -86,6 +86,7 @@ metadata:
   labels:
     {{- include "devlake.labels" . | nindent 4 }}
 spec:
+  type: {{ .Values.service.type }}
   selector:
     {{- include "devlake.selectorLabels" . | nindent 4 }}
     devlakeComponent: lake
