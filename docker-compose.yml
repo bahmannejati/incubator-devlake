@@ -21,7 +21,7 @@ services:
       - mysql-storage:/var/lib/mysql
     restart: always
     ports:
-      - "127.0.0.1:3306"
+      - "127.0.0.1:3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: admin
       MYSQL_DATABASE: lake
