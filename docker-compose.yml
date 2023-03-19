@@ -45,7 +45,7 @@ services:
   #     POSTGRES_PASSWORD: merico
 
   grafana:
-    image: bahmannejati/devlake-dashboard:v0.17.2
+    image: bahmannejati/devlake-dashboard:v0.17.3
     build:
       context: grafana/
     ports:
@@ -64,7 +64,7 @@ services:
       - mysql
 
   devlake:
-    image: bahmannejati/devlake:v0.17.2
+    image: bahmannejati/devlake:v0.17.3
     build:
       context: backend
       args:
@@ -82,7 +82,7 @@ services:
       - mysql
 
   config-ui:
-    image: bahmannejati/devlake-config-ui:v0.17.2
+    image: bahmannejati/devlake-config-ui:v0.17.3
     build:
       context: "config-ui"
     ports:
