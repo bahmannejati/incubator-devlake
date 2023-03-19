@@ -134,7 +134,7 @@ EXPOSE 8080
 
 WORKDIR /app
 # Setup Python
-COPY python/requirements.txt /app/requirements.txt
+COPY backend/python/requirements.txt /app/requirements.txt
 RUN python3 -m pip install --no-cache --upgrade pip setuptools && \
     python3 -m pip install --no-cache dbt-mysql dbt-postgres && \
     python3 -m pip install --no-cache -r requirements.txt && \
@@ -152,8 +152,8 @@ COPY --from=build /usr/local/deps/target/lib/*.so* /app/libs
 RUN ldconfig -vn /app/libs
 
 # apps
-COPY --from=build /app/bin /app/bin
-COPY --from=build /app/resources/tap /app/resources/tap
+COPY --from=build /app/backend/bin /app/bin
+COPY --from=build /app/backend/resources/tap /app/resources/tap
 
 ENV PATH="/app/bin:${PATH}"
 
