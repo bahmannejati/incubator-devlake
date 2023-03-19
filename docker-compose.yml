@@ -45,7 +45,7 @@ services:
   #     POSTGRES_PASSWORD: merico
 
   grafana:
-    image: apache/devlake-dashboard:lake-v0.17.0-rc
+    image: apache/devlake-dashboard:lake-v0.17.1-rc
     build:
       context: grafana/
     ports:
@@ -64,7 +64,7 @@ services:
       - mysql
 
   devlake:
-    image: apache/devlake:lake-v0.17.0-rc
+    image: apache/devlake:lake-v0.17.1-rc
     build:
       context: backend
       args:
@@ -82,7 +82,7 @@ services:
       - mysql
 
   config-ui:
-    image: apache/devlake-config-ui:lake-v0.17.0-rc
+    image: apache/devlake-config-ui:lake-v0.17.1-rc
     build:
       context: "config-ui"
     ports:

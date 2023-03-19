@@ -32,4 +32,4 @@ type: application
 version: 0.17.0-rc
 
 # devlake version
-appVersion: lake-v0.17.0-rc
+appVersion: lake-v0.17.1-rc
