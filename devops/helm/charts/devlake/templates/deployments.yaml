@@ -125,9 +125,9 @@ spec:
                 name: {{ include "devlake.fullname" . }}-config
           env:
             - name: DEVLAKE_ENDPOINT
-              value: {{ include "devlake.fullname" . }}-lake:8080
+              value: {{ include "devlake.fullname" . }}-lake.{{ .Release.Namespace }}:8080
             - name: GRAFANA_ENDPOINT
-              value: {{ include "devlake.fullname" . }}-grafana:3000
+              value: {{ include "devlake.fullname" . }}-grafana.{{ .Release.Namespace }}:3000
             {{- include "secret.envs" . | nindent 12 }}
           volumeMounts:
             {{- if ne .Values.option.localtime "" }}
