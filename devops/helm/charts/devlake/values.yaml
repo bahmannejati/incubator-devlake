@@ -147,7 +147,15 @@ lake:
   # If hostNetwork is true, then dnsPolicy is set to ClusterFirstWithHostNet
   hostNetwork: false
 
-  resources: {}
+  resources:
+    requests:
+      memory: "4Gi"
+      cpu: "512m"
+      ephemeral-storage: 300Mi
+    limits:
+      memory: "6Gi"
+      cpu: "1"
+      ephemeral-storage: 300Mi
 
   nodeSelector: {}
 
@@ -207,7 +215,8 @@ ingress:
 
 option:
   # localtime zone info from host path.
-  localtime: /etc/localtime
+  # localtime: /etc/localtime
+  localtime: ""
 
   # database type, supported: [mysql]
   database: mysql

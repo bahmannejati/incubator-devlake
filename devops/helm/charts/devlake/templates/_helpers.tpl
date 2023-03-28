@@ -174,14 +174,14 @@ The probe for check database connection
 Secret Envs
 */}}
 {{- define "secret.envs" -}}
-- name: ADMIN_USER
-  valueFrom:
-    secretKeyRef:
-      name: {{ .Values.secretRef }}
-      key: username
-- name: ADMIN_PASS
-  valueFrom:
-    secretKeyRef:
-      name: {{ .Values.secretRef }}
-      key: password
+# - name: ADMIN_USER
+#   valueFrom:
+#     secretKeyRef:
+#       name: {{ .Values.secretRef }}
+#       key: username
+# - name: ADMIN_PASS
+#   valueFrom:
+#     secretKeyRef:
+#       name: {{ .Values.secretRef }}
+#       key: password
 {{- end }}
