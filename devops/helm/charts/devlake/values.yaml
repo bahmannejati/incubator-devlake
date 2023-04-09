@@ -58,7 +58,15 @@ mysql:
     pullPolicy: IfNotPresent
 
   # resources config for mysql if have
-  resources: {}
+  resources:
+    requests:
+      memory: "2Gi"
+      cpu: "1"
+      ephemeral-storage: 250Mi
+    limits:
+      memory: "4Gi"
+      cpu: "2"
+      ephemeral-storage: 512Mi
 
   # nodeSelector config for mysql if have
   nodeSelector: {}
@@ -119,7 +127,15 @@ grafana:
     repository: bahmannejati/devlake-dashboard
     pullPolicy: Always
 
-  resources: {}
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "500m"
+      ephemeral-storage: 250Mi
+    limits:
+      memory: "2Gi"
+      cpu: "1"
+      ephemeral-storage: 512Mi
 
   nodeSelector: {}
 
@@ -149,13 +165,13 @@ lake:
 
   resources:
     requests:
-      memory: "4Gi"
-      cpu: "512m"
-      ephemeral-storage: 300Mi
-    limits:
-      memory: "6Gi"
+      memory: "2Gi"
       cpu: "1"
-      ephemeral-storage: 300Mi
+      ephemeral-storage: 250Mi
+    limits:
+      memory: "4Gi"
+      cpu: "2"
+      ephemeral-storage: 512Mi
 
   nodeSelector: {}
 
