@@ -27,15 +27,18 @@ import (
 )
 
 func CommitDiffConvertor(pipelineCommitShaList []string, existFinishedCommitDiff []code.FinishedCommitsDiff) (commitPairs []code.CommitsDiff, finishedCommitDiffs []code.FinishedCommitsDiff) {
-	for i := 0; i < len(pipelineCommitShaList)-1; i++ {
+	length := len(pipelineCommitShaList)
+	for i := 0; i < length-1; i++ {
 		for _, item := range existFinishedCommitDiff {
 			if pipelineCommitShaList[i+1] == item.NewCommitSha && pipelineCommitShaList[i] == item.OldCommitSha {
 				i++
 				break
 			}
 		}
-		commitPairs = append(commitPairs, code.CommitsDiff{NewCommitSha: pipelineCommitShaList[i+1], OldCommitSha: pipelineCommitShaList[i]})
-		finishedCommitDiffs = append(finishedCommitDiffs, code.FinishedCommitsDiff{NewCommitSha: pipelineCommitShaList[i+1], OldCommitSha: pipelineCommitShaList[i]})
+		if i < length-1 {
+			commitPairs = append(commitPairs, code.CommitsDiff{NewCommitSha: pipelineCommitShaList[i+1], OldCommitSha: pipelineCommitShaList[i]})
+			finishedCommitDiffs = append(finishedCommitDiffs, code.FinishedCommitsDiff{NewCommitSha: pipelineCommitShaList[i+1], OldCommitSha: pipelineCommitShaList[i]})
+		}
 	}
 	return commitPairs, finishedCommitDiffs
 }
