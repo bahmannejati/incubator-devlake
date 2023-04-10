@@ -137,6 +137,12 @@ grafana:
       cpu: "1"
       ephemeral-storage: 512Mi
 
+  # storage for grafana
+  storage:
+    # the storage class for pv, leave empty will using default
+    class: ""
+    size: 2Gi
+
   nodeSelector: {}
 
   tolerations: []
