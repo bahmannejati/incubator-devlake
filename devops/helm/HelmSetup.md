@@ -15,7 +15,19 @@ sidebar_position: 2
 
 #### You can also check https://github.com/apache/incubator-devlake-helm-chart to make contribution
 
-### Install
+### Install using local package configuration
+
+```shell
+helm install -f ./charts/devlake/values.yaml devlake ./charts/devlake
+```
+
+### Uninstall using local package configuration
+
+```shell
+helm uninstall devlake
+```
+
+### Install online package
 
 To install the chart with release name `devlake`:
 
