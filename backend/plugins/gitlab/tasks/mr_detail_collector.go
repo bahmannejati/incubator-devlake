@@ -51,7 +51,7 @@ func CollectApiMergeRequestDetails(taskCtx plugin.SubTaskContext) errors.Error {
 
 	err = collectorWithState.InitCollector(helper.ApiCollectorArgs{
 		ApiClient:   data.ApiClient,
-		Incremental: false,
+		Incremental: true,
 		Input:       iterator,
 		UrlTemplate: "projects/{{ .Params.ProjectId }}/merge_requests/{{ .Input.Iid }}",
 		Query: func(reqData *helper.RequestData) (url.Values, errors.Error) {

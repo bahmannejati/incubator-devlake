@@ -93,6 +93,8 @@ func GetPipelinesIterator(taskCtx plugin.SubTaskContext, collectorWithState *hel
 	}
 	if collectorWithState.LatestState.LatestSuccessStart != nil {
 		clauses = append(clauses, dal.Where("gitlab_updated_at > ?", *collectorWithState.LatestState.LatestSuccessStart))
+	} else if collectorWithState.TimeAfter != nil {
+		clauses = append(clauses, dal.Where("gitlab_updated_at > ?", *collectorWithState.TimeAfter))
 	}
 	// construct the input iterator
 	cursor, err := db.Cursor(clauses...)
