@@ -18,6 +18,8 @@ limitations under the License.
 package tasks
 
 import (
+	"reflect"
+
 	"github.com/apache/incubator-devlake/core/dal"
 	"github.com/apache/incubator-devlake/core/errors"
 	"github.com/apache/incubator-devlake/core/models/domainlayer"
@@ -26,7 +28,6 @@ import (
 	"github.com/apache/incubator-devlake/core/plugin"
 	helper "github.com/apache/incubator-devlake/helpers/pluginhelper/api"
 	"github.com/apache/incubator-devlake/plugins/gitlab/models"
-	"reflect"
 )
 
 var ConvertMrCommentMeta = plugin.SubTaskMeta{
@@ -72,10 +73,11 @@ func ConvertMergeRequestComment(taskCtx plugin.SubTaskContext) errors.Error {
 				DomainEntity: domainlayer.DomainEntity{
 					Id: domainIdGeneratorComment.Generate(data.Options.ConnectionId, gitlabComments.GitlabId),
 				},
-				PullRequestId: prIdGen.Generate(data.Options.ConnectionId, gitlabComments.MergeRequestId),
-				Body:          gitlabComments.Body,
-				AccountId:     accountIdGen.Generate(data.Options.ConnectionId, gitlabComments.AuthorUserId),
-				CreatedDate:   gitlabComments.GitlabCreatedAt,
+				PullRequestId:   prIdGen.Generate(data.Options.ConnectionId, gitlabComments.MergeRequestId),
+				Body:            gitlabComments.Body,
+				AccountId:       accountIdGen.Generate(data.Options.ConnectionId, gitlabComments.AuthorUserId),
+				AccountUsername: gitlabComments.AuthorUsername,
+				CreatedDate:     gitlabComments.GitlabCreatedAt,
 			}
 			domainComment.Type = getStdCommentType(gitlabComments.Type)
 			if domainComment.Body == "unapproved this merge request" {

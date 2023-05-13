@@ -18,21 +18,23 @@ limitations under the License.
 package code
 
 import (
-	"github.com/apache/incubator-devlake/core/models/domainlayer"
 	"time"
+
+	"github.com/apache/incubator-devlake/core/models/domainlayer"
 )
 
 type PullRequestComment struct {
 	domainlayer.DomainEntity
-	PullRequestId string `gorm:"index"`
-	Body          string
-	AccountId     string `gorm:"type:varchar(255)"`
-	CreatedDate   time.Time
-	CommitSha     string `gorm:"type:varchar(255)"`
-	Position      int
-	Type          string `gorm:"type:varchar(255)"`
-	ReviewId      string `gorm:"type:varchar(255)"`
-	Status        string `gorm:"type:varchar(255)"`
+	PullRequestId   string `gorm:"index"`
+	Body            string
+	AccountId       string `gorm:"type:varchar(255)"`
+	AccountUsername string `gorm:"type:varchar(255)"`
+	CreatedDate     time.Time
+	CommitSha       string `gorm:"type:varchar(255)"`
+	Position        int
+	Type            string `gorm:"type:varchar(255)"`
+	ReviewId        string `gorm:"type:varchar(255)"`
+	Status          string `gorm:"type:varchar(255)"`
 }
 
 func (PullRequestComment) TableName() string {
