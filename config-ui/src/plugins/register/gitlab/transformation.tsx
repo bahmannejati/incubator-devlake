@@ -18,7 +18,7 @@
 
 import React from 'react';
 
-import { CiCd } from './components';
+import { CiCd, Reviewer } from './components';
 import * as S from './styled';
 
 interface Props {
@@ -30,6 +30,7 @@ export const GitLabTransformation = ({ ...props }: Props) => {
   return (
     <S.TransformationWrapper>
       <CiCd {...props} />
+      <Reviewer {...props} />
     </S.TransformationWrapper>
   );
 };

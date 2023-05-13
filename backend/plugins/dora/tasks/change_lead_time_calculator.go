@@ -108,7 +108,13 @@ func CalculateChangeLeadTime(taskCtx plugin.SubTaskContext) errors.Error {
 				projectPrMetric.PrCodingTime = processNegativeValue(codingTime)
 				projectPrMetric.FirstCommitSha = firstCommit.Sha
 			}
-			firstReview, err := getFirstReview(pr.Id, pr.AuthorId, db)
+			firstReview, err := getFirstReview(
+				pr.Id,
+				pr.AuthorId,
+				db,
+				data.Options.ExcludeAuthorAsFirstReviewer,
+				data.Options.ExcludedBotsAsFirstReviewer,
+			)
 			if err != nil {
 				return nil, err
 			}
@@ -174,7 +180,13 @@ func getFirstCommit(prId string, db dal.Dal) (*code.Commit, errors.Error) {
 	return commit, nil
 }
 
-func getFirstReview(prId string, prCreator string, db dal.Dal) (*code.PullRequestComment, errors.Error) {
+func getFirstReview(
+	prId string,
+	prCreator string,
+	db dal.Dal,
+	excludeAuthorAsFirstReviewer bool,
+	excludedBotsAsFirstReviewer string,
+) (*code.PullRequestComment, errors.Error) {
 	review := &code.PullRequestComment{}
 	commentClauses := []dal.Clause{
 		dal.From(&code.PullRequestComment{}),
