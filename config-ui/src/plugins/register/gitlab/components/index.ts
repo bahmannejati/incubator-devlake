@@ -17,4 +17,3 @@
  */
 
 export * from './ci-cd';
-export * from './reviewer';

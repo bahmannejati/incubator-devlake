@@ -24,21 +24,19 @@ import (
 
 type GitlabTransformationRule struct {
 	common.Model
-	Name                         string            `gorm:"type:varchar(255);index:idx_name_gitlab,unique" validate:"required" mapstructure:"name" json:"name"`
-	PrType                       string            `mapstructure:"prType" json:"prType"`
-	PrComponent                  string            `mapstructure:"prComponent" json:"prComponent"`
-	PrBodyClosePattern           string            `mapstructure:"prBodyClosePattern" json:"prBodyClosePattern"`
-	IssueSeverity                string            `mapstructure:"issueSeverity" json:"issueSeverity"`
-	IssuePriority                string            `mapstructure:"issuePriority" json:"issuePriority"`
-	IssueComponent               string            `mapstructure:"issueComponent" json:"issueComponent"`
-	IssueTypeBug                 string            `mapstructure:"issueTypeBug" json:"issueTypeBug"`
-	IssueTypeIncident            string            `mapstructure:"issueTypeIncident" json:"issueTypeIncident"`
-	IssueTypeRequirement         string            `mapstructure:"issueTypeRequirement" json:"issueTypeRequirement"`
-	DeploymentPattern            string            `mapstructure:"deploymentPattern" json:"deploymentPattern"`
-	ProductionPattern            string            `mapstructure:"productionPattern,omitempty" json:"productionPattern" gorm:"type:varchar(255)"`
-	ExcludeAuthorAsFirstReviewer bool              `mapstructure:"excludeAuthorAsFirstReviewer" json:"excludeAuthorAsFirstReviewer" gorm:"type:boolean"`
-	ExcludedBotsAsFirstReviewer  string            `mapstructure:"excludedBotsAsFirstReviewer" json:"excludedBotsAsFirstReviewer" gorm:"type:varchar(255)"`
-	Refdiff                      datatypes.JSONMap `mapstructure:"refdiff,omitempty" json:"refdiff" swaggertype:"object" format:"json"`
+	Name                 string            `gorm:"type:varchar(255);index:idx_name_gitlab,unique" validate:"required" mapstructure:"name" json:"name"`
+	PrType               string            `mapstructure:"prType" json:"prType"`
+	PrComponent          string            `mapstructure:"prComponent" json:"prComponent"`
+	PrBodyClosePattern   string            `mapstructure:"prBodyClosePattern" json:"prBodyClosePattern"`
+	IssueSeverity        string            `mapstructure:"issueSeverity" json:"issueSeverity"`
+	IssuePriority        string            `mapstructure:"issuePriority" json:"issuePriority"`
+	IssueComponent       string            `mapstructure:"issueComponent" json:"issueComponent"`
+	IssueTypeBug         string            `mapstructure:"issueTypeBug" json:"issueTypeBug"`
+	IssueTypeIncident    string            `mapstructure:"issueTypeIncident" json:"issueTypeIncident"`
+	IssueTypeRequirement string            `mapstructure:"issueTypeRequirement" json:"issueTypeRequirement"`
+	DeploymentPattern    string            `mapstructure:"deploymentPattern" json:"deploymentPattern"`
+	ProductionPattern    string            `mapstructure:"productionPattern,omitempty" json:"productionPattern" gorm:"type:varchar(255)"`
+	Refdiff              datatypes.JSONMap `mapstructure:"refdiff,omitempty" json:"refdiff" swaggertype:"object" format:"json"`
 }
 
 func (t GitlabTransformationRule) TableName() string {

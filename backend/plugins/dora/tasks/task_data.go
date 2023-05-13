@@ -27,11 +27,9 @@ type DoraApiParams struct {
 }
 
 type TransformationRules struct {
-	ProductionPattern            string `mapstructure:"productionPattern" json:"productionPattern"`
-	ExcludeAuthorAsFirstReviewer bool   `mapstructure:"excludeAuthorAsFirstReviewer" json:"excludeAuthorAsFirstReviewer"`
-	ExcludedBotsAsFirstReviewer  string `mapstructure:"excludedBotsAsFirstReviewer" json:"excludedBotsAsFirstReviewer"`
-	StagingPattern               string `mapstructure:"stagingPattern" json:"stagingPattern"`
-	TestingPattern               string `mapstructure:"testingPattern" json:"testingPattern"`
+	ProductionPattern string `mapstructure:"productionPattern" json:"productionPattern"`
+	StagingPattern    string `mapstructure:"stagingPattern" json:"stagingPattern"`
+	TestingPattern    string `mapstructure:"testingPattern" json:"testingPattern"`
 }
 
 type DoraOptions struct {

@@ -72,7 +72,5 @@ export const GitLabConfig: PluginConfigType = {
   transformation: {
     deploymentPattern: '(deploy|push-image)',
     productionPattern: 'production',
-    excludeAuthorAsFirstReviewer: true,
-    excludedBotsAsFirstReviewer: '',
   },
 };
