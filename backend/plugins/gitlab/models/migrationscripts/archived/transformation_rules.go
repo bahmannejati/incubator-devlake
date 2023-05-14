@@ -24,21 +24,20 @@ import (
 
 type GitlabTransformationRule struct {
 	archived.Model
-	Name                         string `gorm:"type:varchar(255);index:idx_name_gitlab,unique" validate:"required"`
-	PrType                       string `mapstructure:"prType" json:"prType" gorm:"type:varchar(255)"`
-	PrComponent                  string `mapstructure:"prComponent" json:"prComponent" gorm:"type:varchar(255)"`
-	PrBodyClosePattern           string `mapstructure:"prBodyClosePattern" json:"prBodyClosePattern" gorm:"type:varchar(255)"`
-	IssueSeverity                string `mapstructure:"issueSeverity" json:"issueSeverity" gorm:"type:varchar(255)"`
-	IssuePriority                string `mapstructure:"issuePriority" json:"issuePriority" gorm:"type:varchar(255)"`
-	IssueComponent               string `mapstructure:"issueComponent" json:"issueComponent" gorm:"type:varchar(255)"`
-	IssueTypeBug                 string `mapstructure:"issueTypeBug" json:"issueTypeBug" gorm:"type:varchar(255)"`
-	IssueTypeIncident            string `mapstructure:"issueTypeIncident" json:"issueTypeIncident" gorm:"type:varchar(255)"`
-	IssueTypeRequirement         string `mapstructure:"issueTypeRequirement" json:"issueTypeRequirement" gorm:"type:varchar(255)"`
-	DeploymentPattern            string `mapstructure:"deploymentPattern" json:"deploymentPattern" gorm:"type:varchar(255)"`
-	ProductionPattern            string `mapstructure:"productionPattern,omitempty" json:"productionPattern" gorm:"type:varchar(255)"`
-	ExcludeAuthorAsFirstReviewer bool   `mapstructure:"excludeAuthorAsFirstReviewer" json:"excludeAuthorAsFirstReviewer" gorm:"type:boolean"`
-	ExcludedBotsAsFirstReviewer  string `mapstructure:"excludedBotsAsFirstReviewer" json:"excludedBotsAsFirstReviewer" gorm:"type:varchar(255)"`
-	Refdiff                      datatypes.JSONMap
+	Name                        string `gorm:"type:varchar(255);index:idx_name_gitlab,unique" validate:"required"`
+	PrType                      string `mapstructure:"prType" json:"prType" gorm:"type:varchar(255)"`
+	PrComponent                 string `mapstructure:"prComponent" json:"prComponent" gorm:"type:varchar(255)"`
+	PrBodyClosePattern          string `mapstructure:"prBodyClosePattern" json:"prBodyClosePattern" gorm:"type:varchar(255)"`
+	IssueSeverity               string `mapstructure:"issueSeverity" json:"issueSeverity" gorm:"type:varchar(255)"`
+	IssuePriority               string `mapstructure:"issuePriority" json:"issuePriority" gorm:"type:varchar(255)"`
+	IssueComponent              string `mapstructure:"issueComponent" json:"issueComponent" gorm:"type:varchar(255)"`
+	IssueTypeBug                string `mapstructure:"issueTypeBug" json:"issueTypeBug" gorm:"type:varchar(255)"`
+	IssueTypeIncident           string `mapstructure:"issueTypeIncident" json:"issueTypeIncident" gorm:"type:varchar(255)"`
+	IssueTypeRequirement        string `mapstructure:"issueTypeRequirement" json:"issueTypeRequirement" gorm:"type:varchar(255)"`
+	DeploymentPattern           string `mapstructure:"deploymentPattern" json:"deploymentPattern" gorm:"type:varchar(255)"`
+	ProductionPattern           string `mapstructure:"productionPattern,omitempty" json:"productionPattern" gorm:"type:varchar(255)"`
+	ExcludedBotsAsFirstReviewer string `mapstructure:"excludedBotsAsFirstReviewer" json:"excludedBotsAsFirstReviewer" gorm:"type:varchar(255)"`
+	Refdiff                     datatypes.JSONMap
 }
 
 func (t GitlabTransformationRule) TableName() string {

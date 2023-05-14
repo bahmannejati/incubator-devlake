@@ -25,13 +25,6 @@ interface Props {
 }
 
 export const Reviewer = ({ transformation, setTransformation }: Props) => {
-  const handleAuthorExcludeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTransformation({
-      ...transformation,
-      excludeAuthorAsFirstReviewer: e.target.checked,
-    });
-  };
-
   const handleBotsUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTransformation({
       ...transformation,
@@ -42,12 +35,6 @@ export const Reviewer = ({ transformation, setTransformation }: Props) => {
   return (
     <>
       <h3>Exclude reviewers</h3>
-      <p>These configs are used to detect first review on pull requests to calculate Review Time metric for DORA.</p>
-      <Checkbox
-        label="Exclude author as first reviewer"
-        checked={transformation.excludeAuthorAsFirstReviewer}
-        onChange={handleAuthorExcludeChange}
-      />
       <p>Exclude bots username as first reviewer</p>
       <FormGroup inline label="Usernames">
         <InputGroup

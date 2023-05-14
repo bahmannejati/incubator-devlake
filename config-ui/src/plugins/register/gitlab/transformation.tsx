@@ -30,6 +30,7 @@ export const GitLabTransformation = ({ ...props }: Props) => {
   return (
     <S.TransformationWrapper>
       <CiCd {...props} />
+      <br />
       <Reviewer {...props} />
     </S.TransformationWrapper>
   );

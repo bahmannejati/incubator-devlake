@@ -112,7 +112,6 @@ func CalculateChangeLeadTime(taskCtx plugin.SubTaskContext) errors.Error {
 				pr.Id,
 				pr.AuthorId,
 				db,
-				data.Options.TransformationRules.ExcludeAuthorAsFirstReviewer,
 				data.Options.TransformationRules.ExcludedBotsAsFirstReviewer,
 			)
 			if err != nil {
@@ -184,7 +183,6 @@ func getFirstReview(
 	prId string,
 	prCreator string,
 	db dal.Dal,
-	excludeAuthorAsFirstReviewer bool,
 	excludedBotsAsFirstReviewer string,
 ) (*code.PullRequestComment, errors.Error) {
 	review := &code.PullRequestComment{}

@@ -18,6 +18,9 @@ limitations under the License.
 package tasks
 
 import (
+	"reflect"
+	"time"
+
 	"github.com/apache/incubator-devlake/core/dal"
 	"github.com/apache/incubator-devlake/core/errors"
 	"github.com/apache/incubator-devlake/core/models/domainlayer/code"
@@ -25,8 +28,6 @@ import (
 	"github.com/apache/incubator-devlake/core/models/domainlayer/devops"
 	"github.com/apache/incubator-devlake/core/plugin"
 	"github.com/apache/incubator-devlake/helpers/pluginhelper/api"
-	"reflect"
-	"time"
 )
 
 // CalculateChangeLeadTimeOldMeta will be removed in v0.17
@@ -77,7 +78,12 @@ func CalculateChangeLeadTimeOld(taskCtx plugin.SubTaskContext) errors.Error {
 				projectPrMetric.PrCodingTime = processNegativeValue(codingTime)
 				projectPrMetric.FirstCommitSha = firstCommit.Sha
 			}
-			firstReview, err := getFirstReview(pr.Id, pr.AuthorId, db)
+			firstReview, err := getFirstReview(
+				pr.Id,
+				pr.AuthorId,
+				db,
+				"",
+			)
 			if err != nil {
 				return nil, err
 			}
