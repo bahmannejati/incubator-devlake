@@ -18,6 +18,8 @@ limitations under the License.
 package tasks
 
 import (
+	"reflect"
+
 	"github.com/apache/incubator-devlake/core/dal"
 	"github.com/apache/incubator-devlake/core/errors"
 	"github.com/apache/incubator-devlake/core/models/domainlayer/code"
@@ -25,7 +27,6 @@ import (
 	"github.com/apache/incubator-devlake/core/plugin"
 	helper "github.com/apache/incubator-devlake/helpers/pluginhelper/api"
 	"github.com/apache/incubator-devlake/plugins/gitlab/models"
-	"reflect"
 )
 
 var ConvertApiMrCommitsMeta = plugin.SubTaskMeta{
@@ -68,6 +69,7 @@ func ConvertApiMergeRequestsCommits(taskCtx plugin.SubTaskContext) errors.Error 
 			GitlabMrCommit := inputRow.(*models.GitlabMrCommit)
 			domainPrcommit := &code.PullRequestCommit{
 				CommitSha:     GitlabMrCommit.CommitSha,
+				AuthoredDate:  GitlabMrCommit.AuthoredDate,
 				PullRequestId: domainIdGenerator.Generate(data.Options.ConnectionId, GitlabMrCommit.MergeRequestId),
 			}
 			return []interface{}{

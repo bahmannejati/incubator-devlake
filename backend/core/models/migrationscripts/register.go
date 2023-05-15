@@ -76,5 +76,6 @@ func All() []plugin.MigrationScript {
 		new(removeCreatedDateAfterFromCollectorMeta20230223),
 		new(addHostNamespaceRepoName),
 		new(addAccountUsernameToPrComments20230414),
+		new(addAuthoredDateToPrCommits20230415),
 	}
 }

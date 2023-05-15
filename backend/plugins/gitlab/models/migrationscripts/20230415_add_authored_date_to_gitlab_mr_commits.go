@@ -18,20 +18,33 @@ limitations under the License.
 package migrationscripts
 
 import (
+	"time"
+
+	"github.com/apache/incubator-devlake/core/context"
+	"github.com/apache/incubator-devlake/core/errors"
 	"github.com/apache/incubator-devlake/core/plugin"
 )
 
-// All return all the migration scripts
-func All() []plugin.MigrationScript {
-	return []plugin.MigrationScript{
-		new(addInitTables),
-		new(addGitlabCI),
-		new(addPipelineID),
-		new(addPipelineProjects),
-		new(fixDurationToFloat8),
-		new(addTransformationRule20221125),
-		new(addStdTypeToIssue221230),
-		new(addIsDetailRequired20230210),
-		new(addAuthoredDateToGitlabMrCommits20230415),
-	}
+var _ plugin.MigrationScript = (*addAuthoredDateToGitlabMrCommits20230415)(nil)
+
+type gitlabMrCommits202304 struct {
+	AuthoredDate time.Time
+}
+
+func (gitlabMrCommits202304) TableName() string {
+	return "_tool_gitlab_mr_commits"
+}
+
+type addAuthoredDateToGitlabMrCommits20230415 struct{}
+
+func (script *addAuthoredDateToGitlabMrCommits20230415) Up(basicRes context.BasicRes) errors.Error {
+	return basicRes.GetDal().AutoMigrate(&gitlabMrCommits202304{})
+}
+
+func (*addAuthoredDateToGitlabMrCommits20230415) Version() uint64 {
+	return 20230415547112
+}
+
+func (*addAuthoredDateToGitlabMrCommits20230415) Name() string {
+	return "add authored_date for _tool_gitlab_mr_commits"
 }

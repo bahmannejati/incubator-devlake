@@ -15,21 +15,36 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package code
+package migrationscripts
 
 import (
 	"time"
 
-	"github.com/apache/incubator-devlake/core/models/common"
+	"github.com/apache/incubator-devlake/core/context"
+	"github.com/apache/incubator-devlake/core/errors"
+	"github.com/apache/incubator-devlake/core/plugin"
 )
 
-type PullRequestCommit struct {
-	CommitSha     string `gorm:"primaryKey;type:varchar(40)"`
-	AuthoredDate  time.Time
-	PullRequestId string `json:"id" gorm:"primaryKey;type:varchar(255);comment:This key is generated based on details from the original plugin"` // format: <Plugin>:<Entity>:<PK0>:<PK1>
-	common.NoPKModel
+var _ plugin.MigrationScript = (*addAuthoredDateToPrCommits20230415)(nil)
+
+type prCommits202304 struct {
+	AuthoredDate time.Time
 }
 
-func (PullRequestCommit) TableName() string {
+func (prCommits202304) TableName() string {
 	return "pull_request_commits"
+}
+
+type addAuthoredDateToPrCommits20230415 struct{}
+
+func (script *addAuthoredDateToPrCommits20230415) Up(basicRes context.BasicRes) errors.Error {
+	return basicRes.GetDal().AutoMigrate(&prCommits202304{})
+}
+
+func (*addAuthoredDateToPrCommits20230415) Version() uint64 {
+	return 20230415141275
+}
+
+func (*addAuthoredDateToPrCommits20230415) Name() string {
+	return "add authored_date for pull_request_commits"
 }

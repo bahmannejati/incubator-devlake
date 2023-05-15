@@ -58,7 +58,7 @@ func CalculateChangeLeadTimeOld(taskCtx plugin.SubTaskContext) errors.Error {
 		Input:        cursor,
 		Convert: func(inputRow interface{}) ([]interface{}, errors.Error) {
 			pr := inputRow.(*code.PullRequest)
-			firstCommit, err := getFirstCommit(pr.Id, db)
+			firstPrCommit, err := getFirstPrCommit(pr.Id, db)
 			if err != nil {
 				return nil, err
 			}
@@ -68,15 +68,15 @@ func CalculateChangeLeadTimeOld(taskCtx plugin.SubTaskContext) errors.Error {
 			if err != nil {
 				return nil, err
 			}
-			if firstCommit != nil {
-				codingTime := int64(pr.CreatedDate.Sub(firstCommit.AuthoredDate).Seconds())
+			if firstPrCommit != nil {
+				codingTime := int64(pr.CreatedDate.Sub(firstPrCommit.AuthoredDate).Seconds())
 				if codingTime/60 == 0 && codingTime%60 > 0 {
 					codingTime = 1
 				} else {
 					codingTime = codingTime / 60
 				}
 				projectPrMetric.PrCodingTime = processNegativeValue(codingTime)
-				projectPrMetric.FirstCommitSha = firstCommit.Sha
+				projectPrMetric.FirstCommitSha = firstPrCommit.CommitSha
 			}
 			firstReview, err := getFirstReview(
 				pr.Id,

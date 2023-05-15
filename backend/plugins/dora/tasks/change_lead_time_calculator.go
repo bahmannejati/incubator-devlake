@@ -88,7 +88,7 @@ func CalculateChangeLeadTime(taskCtx plugin.SubTaskContext) errors.Error {
 		Input:        cursor,
 		Convert: func(inputRow interface{}) ([]interface{}, errors.Error) {
 			pr := inputRow.(*code.PullRequest)
-			firstCommit, err := getFirstCommit(pr.Id, db)
+			firstPrCommit, err := getFirstPrCommit(pr.Id, db)
 			if err != nil {
 				return nil, err
 			}
@@ -98,15 +98,15 @@ func CalculateChangeLeadTime(taskCtx plugin.SubTaskContext) errors.Error {
 			if err != nil {
 				return nil, err
 			}
-			if firstCommit != nil {
-				codingTime := int64(pr.CreatedDate.Sub(firstCommit.AuthoredDate).Seconds())
+			if firstPrCommit != nil {
+				codingTime := int64(pr.CreatedDate.Sub(firstPrCommit.AuthoredDate).Seconds())
 				if codingTime/60 == 0 && codingTime%60 > 0 {
 					codingTime = 1
 				} else {
 					codingTime = codingTime / 60
 				}
 				projectPrMetric.PrCodingTime = processNegativeValue(codingTime)
-				projectPrMetric.FirstCommitSha = firstCommit.Sha
+				projectPrMetric.FirstCommitSha = firstPrCommit.CommitSha
 			}
 			firstReview, err := getFirstReview(
 				pr.Id,
@@ -161,22 +161,21 @@ func CalculateChangeLeadTime(taskCtx plugin.SubTaskContext) errors.Error {
 	return converter.Execute()
 }
 
-func getFirstCommit(prId string, db dal.Dal) (*code.Commit, errors.Error) {
-	commit := &code.Commit{}
-	commitClauses := []dal.Clause{
-		dal.From(&code.Commit{}),
-		dal.Join("left join pull_request_commits on commits.sha = pull_request_commits.commit_sha"),
+func getFirstPrCommit(prId string, db dal.Dal) (*code.PullRequestCommit, errors.Error) {
+	prCommit := &code.PullRequestCommit{}
+	prCommitClauses := []dal.Clause{
+		dal.From(&code.PullRequestCommit{}),
 		dal.Where("pull_request_commits.pull_request_id = ?", prId),
-		dal.Orderby("commits.authored_date ASC"),
+		dal.Orderby("pull_request_commits.authored_date ASC"),
 	}
-	err := db.First(commit, commitClauses...)
+	err := db.First(prCommit, prCommitClauses...)
 	if db.IsErrorNotFound(err) {
 		return nil, nil
 	}
 	if err != nil {
 		return nil, err
 	}
-	return commit, nil
+	return prCommit, nil
 }
 
 func getFirstReview(

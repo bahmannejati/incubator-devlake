@@ -18,6 +18,8 @@ limitations under the License.
 package models
 
 import (
+	"time"
+
 	"github.com/apache/incubator-devlake/core/models/common"
 )
 
@@ -30,7 +32,8 @@ import (
 type GitlabMrCommit struct {
 	ConnectionId   uint64 `gorm:"primaryKey"`
 	CommitSha      string `gorm:"primaryKey;type:varchar(40)"`
-	MergeRequestId int    `gorm:"primaryKey;autoIncrement:false"`
+	AuthoredDate   time.Time
+	MergeRequestId int `gorm:"primaryKey;autoIncrement:false"`
 	common.NoPKModel
 }
 

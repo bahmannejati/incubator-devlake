@@ -19,6 +19,7 @@ package tasks
 
 import (
 	"encoding/json"
+
 	"github.com/apache/incubator-devlake/core/errors"
 	"github.com/apache/incubator-devlake/core/plugin"
 	"github.com/apache/incubator-devlake/helpers/pluginhelper/api"
@@ -58,6 +59,7 @@ func ExtractApiMergeRequestsCommits(taskCtx plugin.SubTaskContext) errors.Error 
 
 			gitlabMrCommit := &models.GitlabMrCommit{
 				CommitSha:      gitlabApiCommit.GitlabId,
+				AuthoredDate:   gitlabApiCommit.AuthoredDate.ToTime(),
 				MergeRequestId: input.GitlabId,
 				ConnectionId:   data.Options.ConnectionId,
 			}
