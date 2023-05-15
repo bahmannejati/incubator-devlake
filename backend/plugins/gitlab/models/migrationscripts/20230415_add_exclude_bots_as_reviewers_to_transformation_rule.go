@@ -18,21 +18,31 @@ limitations under the License.
 package migrationscripts
 
 import (
+	"github.com/apache/incubator-devlake/core/context"
+	"github.com/apache/incubator-devlake/core/errors"
 	"github.com/apache/incubator-devlake/core/plugin"
 )
 
-// All return all the migration scripts
-func All() []plugin.MigrationScript {
-	return []plugin.MigrationScript{
-		new(addInitTables),
-		new(addGitlabCI),
-		new(addPipelineID),
-		new(addPipelineProjects),
-		new(fixDurationToFloat8),
-		new(addTransformationRule20221125),
-		new(addStdTypeToIssue221230),
-		new(addIsDetailRequired20230210),
-		new(addAuthoredDateToGitlabMrCommits20230415),
-		new(addExcludeBotsAsFirstReviewer20230415),
-	}
+var _ plugin.MigrationScript = (*addExcludeBotsAsFirstReviewer20230415)(nil)
+
+type transformationRule202304 struct {
+	ExcludedBotsAsFirstReviewer string `gorm:"index;type:varchar(255)"`
+}
+
+func (transformationRule202304) TableName() string {
+	return "_tool_gitlab_transformation_rules"
+}
+
+type addExcludeBotsAsFirstReviewer20230415 struct{}
+
+func (script *addExcludeBotsAsFirstReviewer20230415) Up(basicRes context.BasicRes) errors.Error {
+	return basicRes.GetDal().AutoMigrate(&transformationRule202304{})
+}
+
+func (*addExcludeBotsAsFirstReviewer20230415) Version() uint64 {
+	return 20230415254711
+}
+
+func (*addExcludeBotsAsFirstReviewer20230415) Name() string {
+	return "add excluded_bots_as_first_reviewer for _tool_gitlab_transformation_rules"
 }
