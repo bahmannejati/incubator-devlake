@@ -17,7 +17,7 @@
 
 # replica count for dev
 replicaCount: 1
-imageTag: v0.17.7
+imageTag: v0.18.0
 
 secretRef: the-wall-devlake-ui
 imagePullSecretsRef: image-pull-secret
