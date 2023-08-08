@@ -18,6 +18,7 @@ limitations under the License.
 package tasks
 
 import (
+	"fmt"
 	"reflect"
 	"time"
 
@@ -46,35 +47,34 @@ func calculateTime(start time.Time, end time.Time) time.Duration {
 	var duration time.Duration
 	period := 24 * time.Hour
 
-	var startTime time.Time
-	var endTime time.Time
+	var iterationStartDate = time.Date(start.Year(), start.Month(), start.Day(), workHourStart, 0, 0, 0, start.Location())
+	var iterationEndDate = time.Date(end.Year(), end.Month(), end.Day(), workHourEnd, 0, 0, 0, end.Location())
 
-	var workHourStartDate = time.Date(start.Year(), start.Month(), start.Day(), workHourStart, 0, 0, 0, start.Location())
-	var workHourEndDate = time.Date(end.Year(), end.Month(), end.Day(), workHourEnd, 0, 0, 0, start.Location())
+	fmt.Println(start.Weekday(), end.Weekday())
+	for current := iterationStartDate; current.Before(iterationEndDate); current = current.Add(period) {
 
-	for current := start; current.Before(end); current = current.Add(period) {
 		if isWeekend(current) {
 			continue
 		}
 
-		if start.Before(workHourStartDate) {
-			startTime = workHourStartDate
+		var startDate time.Time
+		var endDate time.Time
+
+		if current.Before(start) {
+			startDate = start
 		} else {
-			startTime = start
+			startDate = current
 		}
 
-		if end.After(workHourEndDate) {
-			endTime = workHourEndDate
+		var currentEndDate = current.Add(time.Duration(workHourEnd-workHourStart) * time.Hour)
+		if currentEndDate.After(end) {
+			endDate = end
 		} else {
-			endTime = end
+			endDate = currentEndDate
 		}
 
-		diff := endTime.Sub(startTime)
-		if diff < 0 {
-			diff = 0
-		}
+		duration += endDate.Sub(startDate)
 
-		duration += diff
 	}
 
 	return duration
