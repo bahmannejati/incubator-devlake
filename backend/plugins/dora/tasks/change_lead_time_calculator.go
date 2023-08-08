@@ -30,6 +30,52 @@ import (
 	"github.com/apache/incubator-devlake/helpers/pluginhelper/api"
 )
 
+var workHourStart = 10
+var workHourEnd = 20
+
+func isWeekend(t time.Time) bool {
+	return t.Weekday() == time.Friday || t.Weekday() == time.Thursday
+}
+func isNonWorkingHour(t time.Time) bool {
+	hour := t.Hour()
+	return hour < workHourStart || hour > workHourEnd
+}
+
+func calculateTime(start time.Time, end time.Time) time.Duration {
+
+	var duration time.Duration
+	period := 24 * time.Hour
+
+	var startTime time.Time
+	var endTime time.Time
+	// Adjust start time if it's before the working hour
+	if start.Hour() < workHourStart {
+		startTime = time.Date(start.Year(), start.Month(), start.Day(), workHourStart, 0, 0, 0, start.Location())
+	} else if start.Hour() > workHourEnd {
+		startTime = time.Date(start.Year(), start.Month(), start.Day(), workHourEnd, 0, 0, 0, start.Location())
+	}
+
+	// Adjust end time if it's after the working hour
+	if end.Hour() > workHourEnd {
+		endTime = time.Date(end.Year(), end.Month(), end.Day(), workHourEnd, 0, 0, 0, end.Location())
+	} else if end.Hour() < workHourStart {
+		endTime = time.Date(end.Year(), end.Month(), end.Day(), workHourStart, 0, 0, 0, end.Location())
+	}
+
+	for current := startTime; current.Before(endTime); current = current.Add(period) {
+		if isWeekend(current) {
+			continue
+		}
+
+		if isNonWorkingHour(current) {
+			continue
+		}
+
+		duration += period
+	}
+
+	return duration
+}
 func CalculateChangeLeadTime(taskCtx plugin.SubTaskContext) errors.Error {
 	db := taskCtx.GetDal()
 	logger := taskCtx.GetLogger()
@@ -98,14 +144,42 @@ func CalculateChangeLeadTime(taskCtx plugin.SubTaskContext) errors.Error {
 			if err != nil {
 				return nil, err
 			}
+
+			// func main() {
+			// 	start := time.Date(2022, time.January, 1, 9, 0, 0, 0, time.UTC)
+			// 	end := time.Date(2022, time.January, 10, 17, 0, 0, 0, time.UTC)
+
+			// 	cycleTime := calculateCycleTime(start, end)
+			// 	fmt.Println("Cycle Time (excluding weekends and non-working hours):", cycleTime)
+			// }
+
+			// func calculateCycleTime(start time.Time, end time.Time) time.Duration {
+			// 	var cycleTime time.Duration
+
+			// 	for current := start; current.Before(end); current = current.Add(24 * time.Hour) {
+			// 		if isWeekend(current) {
+			// 			continue
+			// 		}
+
+			// 		if isNonWorkingHour(current) {
+			// 			continue
+			// 		}
+
+			// 		cycleTime += 24 * time.Hour
+			// 	}
+
+			// 	return cycleTime
+			// }
+
 			if firstPrCommit != nil {
-				codingTime := int64(pr.CreatedDate.Sub(firstPrCommit.AuthoredDate).Seconds())
+				codingTime := int64(calculateTime(firstPrCommit.AuthoredDate, pr.CreatedDate).Seconds())
+
 				if codingTime/60 == 0 && codingTime%60 > 0 {
 					codingTime = 1
 				} else {
 					codingTime = codingTime / 60
 				}
-				projectPrMetric.PrCodingTime = processNegativeValue(codingTime)
+				projectPrMetric.PrCodingTime = processNegativeValue(codingTime) //
 				projectPrMetric.FirstCommitSha = firstPrCommit.CommitSha
 			}
 			firstReview, err := getFirstReview(
@@ -118,10 +192,10 @@ func CalculateChangeLeadTime(taskCtx plugin.SubTaskContext) errors.Error {
 				return nil, err
 			}
 			// clauses filter by merged_date IS NOT NULL, so MergedDate must be not nil.
-			prDuring := processNegativeValue(int64(pr.MergedDate.Sub(pr.CreatedDate).Minutes()))
+			prDuring := processNegativeValue(int64(calculateTime(*pr.MergedDate, pr.CreatedDate).Minutes()))
 			if firstReview != nil && int64(pr.MergedDate.Sub(firstReview.CreatedDate).Seconds()) > 0 {
-				projectPrMetric.PrPickupTime = processNegativeValue(int64(firstReview.CreatedDate.Sub(pr.CreatedDate).Minutes()))
-				projectPrMetric.PrReviewTime = processNegativeValue(int64(pr.MergedDate.Sub(firstReview.CreatedDate).Minutes()))
+				projectPrMetric.PrPickupTime = processNegativeValue(int64(calculateTime(firstReview.CreatedDate, pr.CreatedDate).Minutes()))
+				projectPrMetric.PrReviewTime = processNegativeValue(int64(calculateTime(*pr.MergedDate, firstReview.CreatedDate).Minutes()))
 				projectPrMetric.FirstReviewId = firstReview.Id
 			} else {
 				projectPrMetric.PrReviewTime = prDuring
@@ -137,9 +211,9 @@ func CalculateChangeLeadTime(taskCtx plugin.SubTaskContext) errors.Error {
 			} else {
 				logger.Debug("deploy time of pr %v is nil\n", pr.PullRequestKey)
 			}
-			projectPrMetric.PrCycleTime = nil
+			projectPrMetric.PrCycleTime = nil //
 			var result int64
-			if projectPrMetric.PrCodingTime != nil {
+			if projectPrMetric.PrCodingTime != nil { //
 				result += *projectPrMetric.PrCodingTime
 			}
 			if prDuring != nil {
