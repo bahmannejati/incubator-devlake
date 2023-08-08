@@ -166,10 +166,10 @@ func CalculateChangeLeadTime(taskCtx plugin.SubTaskContext) errors.Error {
 				return nil, err
 			}
 			// clauses filter by merged_date IS NOT NULL, so MergedDate must be not nil.
-			prDuring := processNegativeValue(int64(calculateTime(*pr.MergedDate, pr.CreatedDate).Minutes()))
+			prDuring := processNegativeValue(int64(calculateTime(pr.CreatedDate, *pr.MergedDate).Minutes()))
 			if firstReview != nil && int64(pr.MergedDate.Sub(firstReview.CreatedDate).Seconds()) > 0 {
-				projectPrMetric.PrPickupTime = processNegativeValue(int64(calculateTime(firstReview.CreatedDate, pr.CreatedDate).Minutes()))
-				projectPrMetric.PrReviewTime = processNegativeValue(int64(calculateTime(*pr.MergedDate, firstReview.CreatedDate).Minutes()))
+				projectPrMetric.PrPickupTime = processNegativeValue(int64(calculateTime(pr.CreatedDate, firstReview.CreatedDate).Minutes()))
+				projectPrMetric.PrReviewTime = processNegativeValue(int64(calculateTime(firstReview.CreatedDate, *pr.MergedDate).Minutes()))
 				projectPrMetric.FirstReviewId = firstReview.Id
 			} else {
 				projectPrMetric.PrReviewTime = prDuring
