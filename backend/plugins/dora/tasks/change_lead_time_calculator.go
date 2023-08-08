@@ -30,6 +30,55 @@ import (
 	"github.com/apache/incubator-devlake/helpers/pluginhelper/api"
 )
 
+var workHourStart = 10
+var workHourEnd = 20
+
+func isWeekend(t time.Time) bool {
+	return t.Weekday() == time.Friday || t.Weekday() == time.Thursday
+}
+func isNonWorkingHour(t time.Time) bool {
+	hour := t.Hour()
+	return hour < workHourStart || hour > workHourEnd
+}
+
+func calculateTime(start time.Time, end time.Time) time.Duration {
+
+	var duration time.Duration
+	period := 24 * time.Hour
+
+	var startTime time.Time
+	var endTime time.Time
+
+	var workHourStartDate = time.Date(start.Year(), start.Month(), start.Day(), workHourStart, 0, 0, 0, start.Location())
+	var workHourEndDate = time.Date(end.Year(), end.Month(), end.Day(), workHourEnd, 0, 0, 0, start.Location())
+
+	for current := start; current.Before(end); current = current.Add(period) {
+		if isWeekend(current) {
+			continue
+		}
+
+		if start.Before(workHourStartDate) {
+			startTime = workHourStartDate
+		} else {
+			startTime = start
+		}
+
+		if end.After(workHourEndDate) {
+			endTime = workHourEndDate
+		} else {
+			endTime = end
+		}
+
+		diff := endTime.Sub(startTime)
+		if diff < 0 {
+			diff = 0
+		}
+
+		duration += diff
+	}
+
+	return duration
+}
 func CalculateChangeLeadTime(taskCtx plugin.SubTaskContext) errors.Error {
 	db := taskCtx.GetDal()
 	logger := taskCtx.GetLogger()
@@ -98,8 +147,10 @@ func CalculateChangeLeadTime(taskCtx plugin.SubTaskContext) errors.Error {
 			if err != nil {
 				return nil, err
 			}
+
 			if firstPrCommit != nil {
-				codingTime := int64(pr.CreatedDate.Sub(firstPrCommit.AuthoredDate).Seconds())
+				codingTime := int64(calculateTime(firstPrCommit.AuthoredDate, pr.CreatedDate).Seconds())
+
 				if codingTime/60 == 0 && codingTime%60 > 0 {
 					codingTime = 1
 				} else {
@@ -118,10 +169,10 @@ func CalculateChangeLeadTime(taskCtx plugin.SubTaskContext) errors.Error {
 				return nil, err
 			}
 			// clauses filter by merged_date IS NOT NULL, so MergedDate must be not nil.
-			prDuring := processNegativeValue(int64(pr.MergedDate.Sub(pr.CreatedDate).Minutes()))
+			prDuring := processNegativeValue(int64(calculateTime(pr.CreatedDate, *pr.MergedDate).Minutes()))
 			if firstReview != nil && int64(pr.MergedDate.Sub(firstReview.CreatedDate).Seconds()) > 0 {
-				projectPrMetric.PrPickupTime = processNegativeValue(int64(firstReview.CreatedDate.Sub(pr.CreatedDate).Minutes()))
-				projectPrMetric.PrReviewTime = processNegativeValue(int64(pr.MergedDate.Sub(firstReview.CreatedDate).Minutes()))
+				projectPrMetric.PrPickupTime = processNegativeValue(int64(calculateTime(pr.CreatedDate, firstReview.CreatedDate).Minutes()))
+				projectPrMetric.PrReviewTime = processNegativeValue(int64(calculateTime(firstReview.CreatedDate, *pr.MergedDate).Minutes()))
 				projectPrMetric.FirstReviewId = firstReview.Id
 			} else {
 				projectPrMetric.PrReviewTime = prDuring
