@@ -145,32 +145,6 @@ func CalculateChangeLeadTime(taskCtx plugin.SubTaskContext) errors.Error {
 				return nil, err
 			}
 
-			// func main() {
-			// 	start := time.Date(2022, time.January, 1, 9, 0, 0, 0, time.UTC)
-			// 	end := time.Date(2022, time.January, 10, 17, 0, 0, 0, time.UTC)
-
-			// 	cycleTime := calculateCycleTime(start, end)
-			// 	fmt.Println("Cycle Time (excluding weekends and non-working hours):", cycleTime)
-			// }
-
-			// func calculateCycleTime(start time.Time, end time.Time) time.Duration {
-			// 	var cycleTime time.Duration
-
-			// 	for current := start; current.Before(end); current = current.Add(24 * time.Hour) {
-			// 		if isWeekend(current) {
-			// 			continue
-			// 		}
-
-			// 		if isNonWorkingHour(current) {
-			// 			continue
-			// 		}
-
-			// 		cycleTime += 24 * time.Hour
-			// 	}
-
-			// 	return cycleTime
-			// }
-
 			if firstPrCommit != nil {
 				codingTime := int64(calculateTime(firstPrCommit.AuthoredDate, pr.CreatedDate).Seconds())
 
