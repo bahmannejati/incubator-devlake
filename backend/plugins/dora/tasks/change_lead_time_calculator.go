@@ -48,30 +48,33 @@ func calculateTime(start time.Time, end time.Time) time.Duration {
 
 	var startTime time.Time
 	var endTime time.Time
-	// Adjust start time if it's before the working hour
-	if start.Hour() < workHourStart {
-		startTime = time.Date(start.Year(), start.Month(), start.Day(), workHourStart, 0, 0, 0, start.Location())
-	} else if start.Hour() > workHourEnd {
-		startTime = time.Date(start.Year(), start.Month(), start.Day(), workHourEnd, 0, 0, 0, start.Location())
-	}
 
-	// Adjust end time if it's after the working hour
-	if end.Hour() > workHourEnd {
-		endTime = time.Date(end.Year(), end.Month(), end.Day(), workHourEnd, 0, 0, 0, end.Location())
-	} else if end.Hour() < workHourStart {
-		endTime = time.Date(end.Year(), end.Month(), end.Day(), workHourStart, 0, 0, 0, end.Location())
-	}
+	var workHourStartDate = time.Date(start.Year(), start.Month(), start.Day(), workHourStart, 0, 0, 0, start.Location())
+	var workHourEndDate = time.Date(end.Year(), end.Month(), end.Day(), workHourEnd, 0, 0, 0, start.Location())
 
-	for current := startTime; current.Before(endTime); current = current.Add(period) {
+	for current := start; current.Before(end); current = current.Add(period) {
 		if isWeekend(current) {
 			continue
 		}
 
-		if isNonWorkingHour(current) {
-			continue
+		if start.Before(workHourStartDate) {
+			startTime = workHourStartDate
+		} else {
+			startTime = start
 		}
 
-		duration += period
+		if end.After(workHourEndDate) {
+			endTime = workHourEndDate
+		} else {
+			endTime = end
+		}
+
+		diff := endTime.Sub(startTime)
+		if diff < 0 {
+			diff = 0
+		}
+
+		duration += diff
 	}
 
 	return duration
