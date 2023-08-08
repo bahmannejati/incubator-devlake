@@ -153,7 +153,7 @@ func CalculateChangeLeadTime(taskCtx plugin.SubTaskContext) errors.Error {
 				} else {
 					codingTime = codingTime / 60
 				}
-				projectPrMetric.PrCodingTime = processNegativeValue(codingTime) //
+				projectPrMetric.PrCodingTime = processNegativeValue(codingTime)
 				projectPrMetric.FirstCommitSha = firstPrCommit.CommitSha
 			}
 			firstReview, err := getFirstReview(
@@ -185,9 +185,9 @@ func CalculateChangeLeadTime(taskCtx plugin.SubTaskContext) errors.Error {
 			} else {
 				logger.Debug("deploy time of pr %v is nil\n", pr.PullRequestKey)
 			}
-			projectPrMetric.PrCycleTime = nil //
+			projectPrMetric.PrCycleTime = nil
 			var result int64
-			if projectPrMetric.PrCodingTime != nil { //
+			if projectPrMetric.PrCodingTime != nil {
 				result += *projectPrMetric.PrCodingTime
 			}
 			if prDuring != nil {
