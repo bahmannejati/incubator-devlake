@@ -43,7 +43,7 @@ func TestCalculateTime_Weekend(t *testing.T) {
 
 	duration := calculateTime(start, end)
 
-	if duration != time.Duration(expectedDuration)*time.Hour {
+	if duration != time.Duration(expectedDuration) {
 		t.Errorf("Expected duration: %v, but got: %v", expectedDuration, duration)
 	}
 }
