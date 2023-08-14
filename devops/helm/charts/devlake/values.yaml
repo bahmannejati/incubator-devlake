@@ -173,11 +173,11 @@ lake:
     requests:
       memory: "2Gi"
       cpu: "1"
-      ephemeral-storage: 1Gi
+      ephemeral-storage: "1Gi"
     limits:
       memory: "4Gi"
       cpu: "2"
-      ephemeral-storage: 2Gi
+      ephemeral-storage: "2Gi"
 
   nodeSelector: {}
 

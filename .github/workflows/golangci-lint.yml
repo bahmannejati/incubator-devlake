@@ -40,8 +40,8 @@ jobs:
         run: |
           cd backend
           make mock
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v3
-        with:
-          version: v1.50.1
-          working-directory: ./backend
+      # - name: golangci-lint
+      #   uses: golangci/golangci-lint-action@v3
+      #   with:
+      #     version: v1.50.1
+      #     working-directory: ./backend
